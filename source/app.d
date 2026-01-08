@@ -7,14 +7,14 @@ import std.conv;
 import consolecolors;
 
 void main(string[] args) {
-	enableConsoleUTF8(); /* Нужно для корректной работы на Windows */
+	enableConsoleUTF8(); /* Required for correct operation on Windows */
 	if (args.length <= 1) {
 		shell();
 	} else {
 		if (args[1] == "-q") {
         		quick(args);
         	} else {
-        		writeln("Аргументы не распознаны.");
+        		writeln("Arguments not recognized.");
         	}
         }
 }
@@ -22,13 +22,13 @@ void main(string[] args) {
 void uerr(string error, char type) {
 	switch (type) {
 		case 'e':
-			cwritefln("udpping: <b><red>Ошибка:</red> %s</b>", error);
+			cwritefln("udpping: <b><red>Error:</red> %s</b>", error);
 			break;
 		case 'i':
-			cwritefln("udpping: <b><cyan>Подсказка:</cyan> %s</b>", error);
+			cwritefln("udpping: <b><cyan>Hint:</cyan> %s</b>", error);
 			break;
 		case 's':
-			cwritefln("udpping: <b><lgreen>Успешно!</lgreen></b>");
+			cwritefln("udpping: <b><lgreen>Success!</lgreen></b>");
 			break;
 		default:
 			return;
@@ -36,22 +36,22 @@ void uerr(string error, char type) {
 }
 
 int quick(string[] args) {
-	cwritefln("<b>Quick UdpPing</b>:<b><grey> v0.1.3</grey></b>");
+	cwritefln("<b>Quick UdpPing</b>:<b><grey> v0.1.4</grey></b>");
 	
 	if (args.length < 6) {
-		uerr("Недостаточно аргументов.", 'e');
+		uerr("Not enough arguments.", 'e');
 		return(-1);
 	}
 	
 	if (!(args[2] == "-a" || args[2] == "--address")) {
-		uerr("Неверное использование.", 'e');
-		uerr("Вторым аргументом должен быть -a [адрес:порт] или --address [адрес:порт]!", 'i');
+		uerr("Incorrect usage.", 'e');
+		uerr("The second argument must be -a [address:port] or --address [address:port]!", 'i');
 		return(-1);
 	}
 	
 	if (!(args[4] == "-s" || args[4] == "--send")) {
-		uerr("Неверное использование.", 'e');
-		uerr("Третьим аргументом должен быть -s [сообщение] или --send [сообщение]!", 'i');
+		uerr("Incorrect usage.", 'e');
+		uerr("The third argument must be -s [message] or --send [message]!", 'i');
 		return(-1);
 	}
 	
@@ -65,7 +65,7 @@ int quick(string[] args) {
 }
 
 void shell() {
-	cwritefln("<b>Консоль UdpPing</b>:<b><grey> v0.1.3</grey></b>");
+	cwritefln("<b>UdpPing Console</b>:<b><grey> v0.1.4</grey></b>");
 	auto udps = new UdpSocket();
         auto addr = new InternetAddress("localhost", 25565);
         udps.connect(addr);
@@ -87,11 +87,11 @@ void shell() {
                                 		udps.connect(addr);
                                 		uerr("", 's');
 					} else {
-						uerr("Неверное использование.", 'e');
-						uerr("Адрес должен быть в формате айпи:порт!", 'i');
+						uerr("Incorrect usage.", 'e');
+						uerr("Address must be in the format ip:port!", 'i');
 					}
                                 } else {
-                                	write("Адрес UDP сервера: ");
+                                	write("UDP server address: ");
 					stdout.flush();
                                 	auto tmp = (stdin.readln().strip()).findSplit(":");
                                 	if (tmp[2] != "") {
@@ -99,8 +99,8 @@ void shell() {
                                 		udps.connect(addr);
                                 		uerr("", 's');
                                 	} else {
-                                		uerr("Неверное использование.", 'e');
-						uerr("Адрес должен быть в формате айпи:порт!", 'i');
+                                		uerr("Incorrect usage.", 'e');
+						uerr("Address must be in the format ip:port!", 'i');
                                 	}
                                 }
                                 break;
@@ -109,7 +109,7 @@ void shell() {
                                 	udps.send(input[1]);
                                 	uerr("", 's');
                                 } else {
-                                	write("Сообщение: ");
+                                	write("Message: ");
 					stdout.flush();
                                 	string tmp = stdin.readln().strip();
                                 	udps.send(tmp);
@@ -117,14 +117,14 @@ void shell() {
                                 }
                                 break;
                         case "help":
-                                cwritefln("<b>Команды:\n  connect [адрес:порт]</b> - Подключает к UDP серверу. Если адрес сервера не указан, Вас его спросят. <b><red>ИСПОЛЬЗОВАТЬ ДО \"send\"!</red>\n  send [сообщение]</b> - Отправляет сообщение на подключенный UDP сервер. <b><red>ИСПОЛЬЗОВАТЬ ПОСЛЕ \"connect\"!</red>\n  ver</b> - Выводит версию Консоли UdpPing.\n  <b>exit</b> - Выходит из Консоли UdpPing.");
+                                cwritefln("<b>Commands:\n  connect [address:port]</b> - Connects to a UDP server.  If no address is provided, the program will prompt you. <b><red>USE BEFORE \"send\"!</red>\n  send [message]</b> - Sends a message to the connected UDP server. <b><red>USE AFTER \"connect\"!</red>\n  sendw [message]</b> - does the same as send, but also waits for a response from the server. <b><red>USE AFTER \"connect\"!</red>\n  ver</b> - Displays the UdpPing Console version.\n  <b>exit</b> - Exits the UdpPing Console.");
                                 break;
                         case "ver":
-                                cwritefln("<b>Консоль UdpPing</b>:<b><grey> v0.1.3</grey></b>");
+                                cwritefln("<b>UdpPing Console</b>:<b><grey> v0.1.4</grey></b>");
                                 break;
                         
                         default:
-                                uerr("Неизвестная команда: \"" ~ input[0] ~ "\"", 'e');
+                                uerr("Unknown command: \"" ~ input[0] ~ "\"", 'e');
                 }
         }
 }

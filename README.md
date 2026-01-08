@@ -1,52 +1,47 @@
 # UdpPing v0.1.3
 
-Простая утилита для отправления запросов на UDP сервер.
+A simple utility for sending requests to a UDP server.
 
-## Компилирование и запуск приложения
+## Compiling and Running the Application
 
+First, clone the repository:  
+`git clone https://github.com/leadway-team/udpping.git`
 
-Сначала клонируем репозиторий:
-`git clone https://github.com/arducat/udpping.git`
-
-
-Если вы хотите скомпилировать и сразу запустить:
+If you want to compile and run immediately:  
 `dub run --build=release`
 
-
-Если вы хотите просто скомпилировать:
+If you only want to compile:  
 `dub build --build=release`
 
-Скомпилированная версия соберется в корне папки.
+## Using the Application
 
-Так же готовый бинарный файл можно найти в релизах.
+UdpPing has two usage modes:  
+1. "Quick" mode (introduced in v0.1.1)  
+2. UdpPing Console (introduced in v0.1.0, expanded in v0.1.1)
 
-## Использование приложения
+### Using "Quick" Mode
 
-В UdpPing есть два типа использования:
-1. "Быстрый" режим (появился в v0.1.1)
-2. Консоль UdpPing (появился в v0.1.0, был дополнен в v0.1.1)
+The `-q` flag enables "Quick" mode.  
+Immediately after it, specify either `-a [UDP server address]` or `--address [UDP server address]`.  
+After the address, specify either `-s [message]` or `--send [message]`.
 
-### Использование "быстрого" режима
+This will send your message to the specified UDP server.  
+Example:  
+`udpping -q -a 127.0.0.1:1234 -s Hello`
 
-За "быстрый" режим отвечает флаг `-q`.  
-Сразу после него должен быть либо `-a [адрес udp сервера]`, либо `--address [адрес udp сервера]`.  
-После адреса должен быть либо `-s [сообщение]`, либо `--send [сообщение]`.  
+### Using the UdpPing Console
 
-Это должно отправить на указаный UDP сервер Ваше сообщение.  
-Пример:  
-`udpping -q -a 127.0.0.1:1234 -s Привет`  
+To enter the UdpPing Console, simply run the application without arguments.
 
-### Использование Консоли UdpPing
+Inside the console, the following commands are available:  
+- `help` - displays help information  
+- `ver` - shows the version  
+- `connect [address]` - connects to a UDP server. If no address is provided, the program will prompt you.  
+- `send [message]` - sends a message to the UDP server. If no address is provided, the program will prompt you.  
+- `sendw [message]` - does the same as send, but also waits for a response from the server.  
 
-Чтобы войти в Консоль UdpPing, достаточно не указывать аргументы.  
+Note: Use `send` before `connect`. Otherwise, the message will not be sent.
 
-Внутри консоли есть следующие команды:  
- -  help - показывает справку  
- -  ver - показывает версию  
- -  connect \[адрес] - подключает к UDP серверу. Если Вы не указали адрес, то программа у Вас его спросит.  
- -  send \[сообщение] - отправляет на UDP сервер сообщение. Если Вы не указали сообщение, то программа у Вас его спросит.  
-
-Внимание: используйте send до connect. Иначе сообщение не будет отправлено.
-
-### Благодарности:
-1. Спасибо Grisshink
+### Acknowledgments:  
+1. Thanks to Grisshink  
+2. Thanks to the disbanded FTeam  
