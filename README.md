@@ -1,4 +1,4 @@
-# UdpPing v0.1.3
+# UdpPing v0.1.4
 
 A simple utility for sending requests to a UDP server.
 

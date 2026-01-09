@@ -116,6 +116,38 @@ void shell() {
                                 	uerr("", 's');
                                 }
                                 break;
+                        case "sendw":
+                                if (input.length == 2) {
+                                	udps.send(input[1]);
+                                } else {
+                                	write("Message: ");
+					stdout.flush();
+                                	string tmp = stdin.readln().strip();
+                                	udps.send(tmp);
+                                }
+                                
+                                cwritef("<b>Waiting for a response...</b> ");
+                                stdout.flush();
+                                
+                                ubyte[1024] buf;
+                                long received = udps.receive(buf[]);
+                                
+                                if (received <= 0) {
+                                	if (received == 0) {
+                                		uerr("connection closed", 'e');
+                                	} else {
+                                		uerr("receive error", 'e');
+                                	}
+                                	break;
+                                }
+                                
+                                auto data = buf[0..cast(size_t)received];
+                                writeln("DEBUG: Raw bytes = ", data); 
+                                string response = cast(string)data;
+                                writeln(response.strip());
+                                
+                                uerr("", 's');
+                                break;
                         case "help":
                                 cwritefln("<b>Commands:\n  connect [address:port]</b> - Connects to a UDP server.  If no address is provided, the program will prompt you. <b><red>USE BEFORE \"send\"!</red>\n  send [message]</b> - Sends a message to the connected UDP server. <b><red>USE AFTER \"connect\"!</red>\n  sendw [message]</b> - does the same as send, but also waits for a response from the server. <b><red>USE AFTER \"connect\"!</red>\n  ver</b> - Displays the UdpPing Console version.\n  <b>exit</b> - Exits the UdpPing Console.");
                                 break;
