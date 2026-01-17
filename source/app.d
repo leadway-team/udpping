@@ -5,6 +5,9 @@ import std.array;
 import std.string;
 import std.conv;
 import consolecolors;
+import core.time;
+
+string[] history; //TODO
 
 void main(string[] args) {
 	enableConsoleUTF8(); /* Required for correct operation on Windows */
@@ -36,7 +39,7 @@ void uerr(string error, char type) {
 }
 
 int quick(string[] args) {
-	cwritefln("<b>Quick UdpPing</b>:<b><grey> v0.1.4</grey></b>");
+	cwritefln("<b>Quick UdpPing</b>:<b><grey> v0.1.5</grey></b>");
 	
 	if (args.length < 6) {
 		uerr("Not enough arguments.", 'e');
@@ -65,10 +68,10 @@ int quick(string[] args) {
 }
 
 void shell() {
-	cwritefln("<b>UdpPing Console</b>:<b><grey> v0.1.4</grey></b>");
+	cwritefln("<b>UdpPing Console</b>:<b><grey> v0.1.5 BETA</grey></b>");
 	auto udps = new UdpSocket();
-        auto addr = new InternetAddress("localhost", 25565);
-        udps.connect(addr);
+	udps.setOption(SocketOptionLevel.SOCKET, SocketOption.RCVTIMEO, 5.seconds);
+        InternetAddress addr = null;
         bool gogo = true;
 
         while (gogo) {
@@ -105,26 +108,52 @@ void shell() {
                                 }
                                 break;
                         case "send":
-                                if (input.length == 2) {
-                                	udps.send(input[1]);
-                                	uerr("", 's');
+                        	if (addr is null) {
+                        		uerr("Command was used before connecting to the UDP server!", 'e');
+                        		uerr("First, use the \"connect\" command", 'i');
+                        		break;
+                        	}
+                        	
+                        	string tmp = "";
+                        	
+                                if (input.length >= 2) {
+					for (int i = 1; i < input.length; i++) {
+						if (i != 1) {
+							tmp = tmp ~ " ";
+						}
+						tmp = tmp ~ input[i];
+					}
                                 } else {
                                 	write("Message: ");
 					stdout.flush();
-                                	string tmp = stdin.readln().strip();
-                                	udps.send(tmp);
-                                	uerr("", 's');
+                                	tmp = stdin.readln().strip();
                                 }
+                                
+                                udps.send(tmp);
+                                uerr("", 's');
                                 break;
                         case "sendw":
-                                if (input.length == 2) {
-                                	udps.send(input[1]);
+                        	if (addr is null) {
+                        		uerr("Command was used before connecting to the UDP server!", 'e');
+                        		uerr("First, use the \"connect\" command", 'i');
+                        		break;
+                        	}
+                        	
+                                string tmp = "";
+                        	
+                                if (input.length >= 2) {
+					for (int i = 1; i < input.length; i++) {
+						if (i != 1) {
+							tmp = tmp ~ " ";
+						}
+						tmp = tmp ~ input[i];
+					}
                                 } else {
                                 	write("Message: ");
 					stdout.flush();
-                                	string tmp = stdin.readln().strip();
-                                	udps.send(tmp);
+                                	tmp = stdin.readln().strip();
                                 }
+                                udps.send(tmp);
                                 
                                 cwritef("<b>Waiting for a response...</b> ");
                                 stdout.flush();
