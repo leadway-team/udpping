@@ -171,7 +171,6 @@ void shell() {
                                 }
                                 
                                 auto data = buf[0..cast(size_t)received];
-                                writeln("DEBUG: Raw bytes = ", data); 
                                 string response = cast(string)data;
                                 writeln(response.strip());
                                 
